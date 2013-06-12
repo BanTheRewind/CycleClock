@@ -39,3 +39,12 @@ MyApp::onTick()
   }
   cout << "tick" << endl;
 }
+
+int main( int argc, char* argv[] )
+{
+  MyApp app;
+  for ( size_t i = 0; i < 10000; ++i ) {
+    // Let it run for a bit
+  }
+  return 0;
+}
