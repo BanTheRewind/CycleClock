@@ -1,0 +1,41 @@
+CycleClock
+
+High accuracy CPU-cycle-based clock. Suitable for music sequencing.
+Only runs on Windows with Intel CPU.
+
+Requires boost::signals2.
+
+Usage:
+
+#################################
+
+#include "CycleClock.h"
+
+class MyApp
+{
+public:
+   MyApp();
+private:
+   CycleClockRef mClock;
+   double mCpuFreq;
+   void onTick();
+};
+
+using namespace std;
+
+MyApp::MyApp()
+{
+  mCpuSpeed = 0.0;
+  mClock = CycleClock::create();
+  mClock->setCallback( &MyApp::onTick, this );
+  mClock->tick( 0.000001, true ); // Second argument repeats
+}
+
+MyApp::onTick()
+{
+  if ( mCpuSpeed == 0.0 ) {
+    mCpuFreq = mClock->getCpuFreq();
+	cout << "CPU speed: " << mFreq << endl;
+  }
+  cout << "tick" << endl;
+}
