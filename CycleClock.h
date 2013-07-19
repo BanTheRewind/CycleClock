@@ -36,7 +36,7 @@
 
 #pragma once
 
-#include "boost/signals2.hpp"
+#include <memory>
 #include <thread>
 
 typedef std::shared_ptr<class CycleClock> CycleClockRef;
@@ -44,25 +44,30 @@ typedef std::shared_ptr<class CycleClock> CycleClockRef;
 class CycleClock : public std::enable_shared_from_this<CycleClock>
 {
 public:
-	static CycleClockRef				create();
+	static CycleClockRef	create();
 	~CycleClock();
 
-	void								tick( double seconds, bool repeat = false );
+	void					tick( double seconds, bool repeat = false );
 
-	double								getCpuFreq() const;
+	double					getCpuFreq() const;
 
-	double								getInterval() const;
-	void								setInterval( double interval );
+	double					getInterval() const;
+	void					setInterval( double interval );
 	
-	bool								isRepeating() const;
-	void								enableRepeat( bool repeat );
+	bool					isRepeating() const;
+	void					enableRepeat( bool repeat );
 	
-	void								stop();
+	void					stop();
 	
 	template<typename T, typename Y>
-	inline void							setCallback( T callback, Y* callbackObject )
+	inline void				connectEventHandler( T callback, Y* callbackObject )
 	{
-		mSignal.connect( std::bind( callback, callbackObject ) );
+		connectEventHandler( std::bind( callback, callbackObject ) );
+	}
+
+	inline void				connectEventHandler( std::function<void ()> eventHandler )
+	{
+		mEventHandler = eventHandler;
 	}
 protected:
 	typedef std::shared_ptr<std::thread>	ThreadRef;
@@ -79,17 +84,17 @@ protected:
 
 	CycleClock();
 
-	void								calcCpuFreq();
-	volatile double						mCpuFreq;
-	ThreadRef							mThreadCpuFreq;
+	void					calcCpuFreq();
+	volatile double			mCpuFreq;
+	ThreadRef				mThreadCpuFreq;
 	
-	__int64								mDelay;
-	__int64								mInterval;
-	double								mIntervalSeconds;
-	bool								mRepeat;
-	volatile bool						mRunningTick;
-	boost::signals2::signal<void ()>	mSignal;
-	ThreadRef							mThreadTick;
-	__int64								rdtsc();
-	void								runTick();
+	__int64					mDelay;
+	std::function<void ()>	mEventHandler;
+	__int64					mInterval;
+	double					mIntervalSeconds;
+	bool					mRepeat;
+	volatile bool			mRunningTick;
+	ThreadRef				mThreadTick;
+	__int64					rdtsc();
+	void					runTick();
 };

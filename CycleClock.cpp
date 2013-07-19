@@ -168,7 +168,7 @@ void CycleClock::runTick()
 		if ( elapsed >= mDelay ) {
 			mDelay = mInterval - ( elapsed - mInterval );
 			c1 = c2;
-			mSignal();
+			mEventHandler();
 			if ( !mRepeat ) {
 				mRunningTick = false;
 			}
