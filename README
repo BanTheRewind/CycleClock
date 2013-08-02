@@ -3,8 +3,6 @@ CycleClock
 High accuracy CPU-cycle-based clock. Suitable for music sequencing.
 Only runs on Windows with Intel CPU.
 
-Requires boost::signals2.
-
 Usage:
 
 #################################
@@ -27,7 +25,7 @@ MyApp::MyApp()
 {
   mCpuSpeed = 0.0;
   mClock = CycleClock::create();
-  mClock->setCallback( &MyApp::onTick, this );
+  mClock->connectEventHandler( &MyApp::onTick, this );
   mClock->tick( 0.000001, true ); // Second argument repeats
 }
 
