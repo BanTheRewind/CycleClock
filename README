@@ -33,7 +33,7 @@ MyApp::onTick()
 {
   if ( mCpuSpeed == 0.0 ) {
     mCpuFreq = mClock->getCpuFreq();
-	cout << "CPU speed: " << mFreq << endl;
+	cout << "CPU speed: " << mCpuFreq << endl;
   }
   cout << "tick" << endl;
 }
